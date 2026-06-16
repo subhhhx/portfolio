@@ -409,6 +409,19 @@ export default function Portfolio() {
           <article className={`contact${activeTab === 'contact' ? ' active' : ''}`} data-page="contact">
             <header><h2 className="h2 article-title">Contact</h2></header>
 
+            <div className="mapbox">
+              <iframe
+                src="https://maps.google.com/maps?q=Kolkata,West+Bengal,India&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                loading="lazy"
+                title="Kolkata, West Bengal, India"
+                style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.2)' }}
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
             <section className="contact-form">
               <h3 className="h3 form-title">Contact Form</h3>
               <form className="form" onSubmit={handleContactSubmit}>
