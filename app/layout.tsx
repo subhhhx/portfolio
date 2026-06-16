@@ -4,7 +4,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const BASE_URL = "https://subhhhx.vercel.app";
+const BASE_URL = "https://portfolio-subh2.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
