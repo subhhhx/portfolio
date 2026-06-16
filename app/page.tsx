@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-type Tab = 'about' | 'skills' | 'projects' | 'resume' | 'contact';
+type Tab = 'about' | 'projects' | 'resume' | 'contact';
 
 interface Project {
   title: string;
@@ -12,7 +12,10 @@ interface Project {
   tech: string[];
   github: string;
   live?: string;
+  hideSource?: boolean;
 }
+
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 const person = {
   name: 'Subhadeep Mandal',
@@ -49,24 +52,6 @@ const services = [
   },
 ];
 
-const skills = [
-  { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
-  { name: 'TensorFlow', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg' },
-  { name: 'Pandas', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg' },
-  { name: 'Arduino', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg' },
-  { name: 'C++', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
-  { name: 'HTML5', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
-  { name: 'CSS3', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
-  { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-  { name: 'Figma', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg' },
-  { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-  {
-    name: 'GitHub',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
-    invert: true,
-  },
-  { name: 'Linux', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg' },
-];
 
 const projects: Project[] = [
   {
@@ -84,6 +69,7 @@ const projects: Project[] = [
     desc: 'Designed and built an Arduino-based line-following robot. Developed and integrated IR sensor modules for precise line detection and implemented efficient path-following algorithms with obstacle avoidance.',
     tech: ['Arduino', 'C++', 'IR Sensors', 'Motor Control'],
     github: 'https://github.com/subhhhx',
+    hideSource: true,
   },
   {
     title: 'Hariyali — E-commerce App',
@@ -96,6 +82,12 @@ const projects: Project[] = [
 ];
 
 const education = [
+  {
+    school: 'Xavier Institute of Management Bhubaneswar (XIMB)',
+    degree: 'PGDM — Business Management (BM)',
+    duration: '2026 — 2028',
+    detail: 'Bhubaneswar, Odisha, India\nBatch: BM 28',
+  },
   {
     school: 'Techno Main Salt Lake',
     degree: 'B.Tech — Computer Science & Business Systems',
@@ -144,8 +136,27 @@ export default function Portfolio() {
   const [activeTab, setActiveTab] = useState<Tab>('about');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [contactForm, setContactForm] = useState({ fullname: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState<FormStatus>('idle');
 
   const closeModal = useCallback(() => setSelectedProject(null), []);
+
+  async function handleContactSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormStatus('loading');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactForm),
+      });
+      if (!res.ok) throw new Error();
+      setFormStatus('success');
+      setContactForm({ fullname: '', email: '', message: '' });
+    } catch {
+      setFormStatus('error');
+    }
+  }
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -160,7 +171,7 @@ export default function Portfolio() {
       {/* NAVBAR */}
       <nav className="navbar">
         <ul className="navbar-list">
-          {(['about', 'skills', 'projects', 'resume', 'contact'] as Tab[]).map((tab) => (
+          {(['about', 'projects', 'resume', 'contact'] as Tab[]).map((tab) => (
             <li key={tab} className="navbar-item">
               <button
                 className={`navbar-link${activeTab === tab ? ' active' : ''}`}
@@ -168,7 +179,6 @@ export default function Portfolio() {
               >
                 <ion-icon name={
                   tab === 'about' ? 'person-outline' :
-                  tab === 'skills' ? 'construct-outline' :
                   tab === 'projects' ? 'briefcase-outline' :
                   tab === 'resume' ? 'document-text-outline' :
                   'mail-outline'
@@ -275,30 +285,6 @@ export default function Portfolio() {
                       <h4 className="h4 service-item-title">{s.title}</h4>
                       <p className="service-item-text">{s.desc}</p>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </article>
-
-          {/* SKILLS */}
-          <article className={`skills${activeTab === 'skills' ? ' active' : ''}`} data-page="skills">
-            <header><h2 className="h2 article-title">My Skills</h2></header>
-            <section className="skill">
-              <h3 className="h3 service-title">Technologies</h3>
-              <ul className="skills-list">
-                {skills.map((sk) => (
-                  <li key={sk.name} className="skills-item">
-                    <div className="skills-icon">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={sk.icon}
-                        alt={sk.name}
-                        width={40}
-                        style={sk.invert ? { filter: 'invert(1)' } : undefined}
-                      />
-                    </div>
-                    <p className="skills-name">{sk.name}</p>
                   </li>
                 ))}
               </ul>
@@ -419,16 +405,45 @@ export default function Portfolio() {
 
             <section className="contact-form">
               <h3 className="h3 form-title">Contact Form</h3>
-              {/* Create a free account at https://formspree.io and replace YOUR_FORM_ID */}
-              <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" className="form">
+              <form className="form" onSubmit={handleContactSubmit}>
                 <div className="input-wrapper">
-                  <input type="text" name="fullname" className="form-input" placeholder="Full name" required />
-                  <input type="email" name="email" className="form-input" placeholder="Email address" required />
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Full name"
+                    required
+                    value={contactForm.fullname}
+                    onChange={(e) => setContactForm((f) => ({ ...f, fullname: e.target.value }))}
+                  />
+                  <input
+                    type="email"
+                    className="form-input"
+                    placeholder="Email address"
+                    required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm((f) => ({ ...f, email: e.target.value }))}
+                  />
                 </div>
-                <textarea name="message" className="form-input" placeholder="Your Message" required />
-                <button className="form-btn" type="submit">
-                  <ion-icon name="paper-plane" />
-                  <span>Send Message</span>
+                <textarea
+                  className="form-input"
+                  placeholder="Your Message"
+                  required
+                  value={contactForm.message}
+                  onChange={(e) => setContactForm((f) => ({ ...f, message: e.target.value }))}
+                />
+                {formStatus === 'success' && (
+                  <p style={{ color: 'var(--orange-yellow-crayola)', marginBottom: 12, fontSize: 'var(--fs-6)' }}>
+                    Message sent! I&apos;ll get back to you soon.
+                  </p>
+                )}
+                {formStatus === 'error' && (
+                  <p style={{ color: 'hsl(0,60%,60%)', marginBottom: 12, fontSize: 'var(--fs-6)' }}>
+                    Something went wrong. Please try again.
+                  </p>
+                )}
+                <button className="form-btn" type="submit" disabled={formStatus === 'loading'}>
+                  <ion-icon name={formStatus === 'loading' ? 'reload-outline' : 'paper-plane'} />
+                  <span>{formStatus === 'loading' ? 'Sending…' : 'Send Message'}</span>
                 </button>
               </form>
             </section>
@@ -498,15 +513,17 @@ export default function Portfolio() {
                 </div>
               </div>
               <div className="project-modal-actions">
-                <a
-                  href={selectedProject.github}
-                  className="project-modal-btn project-modal-btn-github"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <ion-icon name="logo-github" />
-                  <span>Source Code</span>
-                </a>
+                {!selectedProject.hideSource && (
+                  <a
+                    href={selectedProject.github}
+                    className="project-modal-btn project-modal-btn-github"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <ion-icon name="logo-github" />
+                    <span>Source Code</span>
+                  </a>
+                )}
                 {selectedProject.live && (
                   <a
                     href={selectedProject.live}
