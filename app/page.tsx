@@ -4,6 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 
 type Tab = 'about' | 'projects' | 'resume' | 'contact';
 
+// Wrapper suppresses hydration mismatch from ionicons injecting role/className/aria-label after SSR
+function IonIcon({ name, size, style }: { name?: string; size?: string; style?: React.CSSProperties }) {
+  return <ion-icon name={name} size={size} style={style} suppressHydrationWarning />;
+}
+
 interface Project {
   title: string;
   category: string;
@@ -25,39 +30,38 @@ const person = {
   location: 'Kolkata, West Bengal, India',
   github: 'https://github.com/subhhhx',
   linkedin: 'https://www.linkedin.com/in/subhadeep-mandal-aa1674268/',
-  instagram: 'https://www.instagram.com/', // update with actual handle
-  avatar: 'https://placehold.co/150x150/1a1a1a/ffd15c?text=SM',
+  instagram: 'https://www.instagram.com/__subhhh',
+  avatar: 'https://github.com/subhhhx.png',
 };
 
 const services = [
   {
-    icon: 'analytics-outline',
-    title: 'AI & Machine Learning',
-    desc: 'Building predictive models and AI training systems for real-world decision-making.',
+    icon: 'bulb-outline',
+    title: 'Strategic Thinking',
+    desc: 'Breaking down complex business problems into structured frameworks and actionable decisions.',
   },
   {
-    icon: 'bar-chart-outline',
-    title: 'Data Analysis',
-    desc: 'Analysing complex datasets to extract trends, patterns, and actionable insights.',
+    icon: 'stats-chart-outline',
+    title: 'Data-Driven Management',
+    desc: 'Combining analytical rigour with business acumen to drive evidence-based strategy.',
   },
   {
-    icon: 'shield-checkmark-outline',
-    title: 'Cybersecurity',
-    desc: 'Applying Zero Trust principles and cloud security protocols to protect systems.',
+    icon: 'people-outline',
+    title: 'Leadership & Teamwork',
+    desc: 'Leading cross-functional teams, facilitating collaboration, and driving outcomes under ambiguity.',
   },
   {
-    icon: 'color-palette-outline',
-    title: 'UI/UX Design',
-    desc: 'Designing intuitive wireframes and prototypes for seamless user experiences.',
+    icon: 'git-network-outline',
+    title: 'Tech-Business Bridge',
+    desc: 'Translating engineering thinking into business impact across product, operations, and growth.',
   },
 ];
-
 
 const projects: Project[] = [
   {
     title: 'Box Office Revenue Prediction',
     category: 'Machine Learning',
-    image: 'https://placehold.co/600x400/1a1a1a/ffd15c?text=Box+Office+ML',
+    image: '/box-office.webp',
     desc: 'Curated a dataset using TMDB APIs and web scraping of movie trailers. Developed a predictive model for estimating movie revenue using regression techniques and ML algorithms to improve forecasting accuracy.',
     tech: ['Python', 'TMDB API', 'Scikit-learn', 'Pandas', 'Regression'],
     github: 'https://github.com/subhhhx/box-office-revenue-prediction',
@@ -65,7 +69,7 @@ const projects: Project[] = [
   {
     title: 'Arduino Line-Following Bot',
     category: 'Embedded Systems',
-    image: 'https://placehold.co/600x400/1a1a1a/ffd15c?text=Arduino+Bot',
+    image: '/arduino.webp',
     desc: 'Designed and built an Arduino-based line-following robot. Developed and integrated IR sensor modules for precise line detection and implemented efficient path-following algorithms with obstacle avoidance.',
     tech: ['Arduino', 'C++', 'IR Sensors', 'Motor Control'],
     github: 'https://github.com/subhhhx',
@@ -74,7 +78,7 @@ const projects: Project[] = [
   {
     title: 'Hariyali — E-commerce App',
     category: 'UI/UX Design',
-    image: 'https://placehold.co/600x400/1a1a1a/ffd15c?text=Hariyali',
+    image: '/hariyali.png',
     desc: 'Designed the complete UI/UX of an e-commerce application. Developed interactive wireframes and prototypes for efficient user navigation, and collaborated with developers to integrate front-end design with backend functionality.',
     tech: ['Figma', 'UI/UX Design', 'Wireframing', 'Prototyping'],
     github: 'https://github.com/subhhhx/hariyali',
@@ -84,9 +88,9 @@ const projects: Project[] = [
 const education = [
   {
     school: 'Xavier Institute of Management Bhubaneswar (XIMB)',
-    degree: 'PGDM — Business Management (BM)',
+    degree: 'MBA — Business Management (BM)',
     duration: '2026 — 2028',
-    detail: 'Bhubaneswar, Odisha, India\nBatch: BM 28',
+    detail: 'Bhubaneswar, Odisha, India',
   },
   {
     school: 'Techno Main Salt Lake',
@@ -177,7 +181,7 @@ export default function Portfolio() {
                 className={`navbar-link${activeTab === tab ? ' active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
-                <ion-icon name={
+                <IonIcon name={
                   tab === 'about' ? 'person-outline' :
                   tab === 'projects' ? 'briefcase-outline' :
                   tab === 'resume' ? 'document-text-outline' :
@@ -208,21 +212,21 @@ export default function Portfolio() {
             <div className="separator" />
             <ul className="contacts-list">
               <li className="contact-item">
-                <div className="icon-box"><ion-icon name="mail-outline" /></div>
+                <div className="icon-box"><IonIcon name="mail-outline" /></div>
                 <div className="contact-info">
                   <p className="contact-title">Email</p>
                   <a href={`mailto:${person.email}`} className="contact-link">{person.email}</a>
                 </div>
               </li>
               <li className="contact-item">
-                <div className="icon-box"><ion-icon name="phone-portrait-outline" /></div>
+                <div className="icon-box"><IonIcon name="phone-portrait-outline" /></div>
                 <div className="contact-info">
                   <p className="contact-title">Phone</p>
                   <a href={`tel:${person.phone}`} className="contact-link">{person.phone}</a>
                 </div>
               </li>
               <li className="contact-item">
-                <div className="icon-box"><ion-icon name="location-outline" /></div>
+                <div className="icon-box"><IonIcon name="location-outline" /></div>
                 <div className="contact-info">
                   <p className="contact-title">Location</p>
                   <address>{person.location}</address>
@@ -233,24 +237,24 @@ export default function Portfolio() {
             <ul className="social-list">
               <li className="social-item">
                 <a href={person.github} className="social-link" target="_blank" rel="noreferrer">
-                  <ion-icon name="logo-github" />
+                  <IonIcon name="logo-github" />
                 </a>
               </li>
               <li className="social-item">
                 <a href={person.linkedin} className="social-link" target="_blank" rel="noreferrer">
-                  <ion-icon name="logo-linkedin" />
+                  <IonIcon name="logo-linkedin" />
                 </a>
               </li>
               <li className="social-item">
                 <a href={person.instagram} className="social-link" target="_blank" rel="noreferrer">
-                  <ion-icon name="logo-instagram" />
+                  <IonIcon name="logo-instagram" />
                 </a>
               </li>
             </ul>
           </div>
 
           <button className="info_more-btn" onClick={() => setSidebarOpen((o) => !o)}>
-            <ion-icon name="chevron-down" />
+            <IonIcon name="chevron-down" />
           </button>
         </aside>
 
@@ -262,14 +266,14 @@ export default function Portfolio() {
             <header><h2 className="h2 article-title">About me</h2></header>
             <section className="about-text">
               <p>
-                I&apos;m a student at XIMB BM 28, with a background in Computer Science &amp; Business Systems
-                from Techno Main Salt Lake, Kolkata. I have a strong interest in AI/ML and data-driven
-                decision-making, with hands-on experience building predictive models and training AI systems.
+                I am an engineer turned management professional, currently pursuing my MBA at XIMB (BM 28).
+                My background in Computer Science and Business Systems gives me a strong foundation in
+                analytical thinking, structured problem solving, and technology-driven decision making.
               </p>
               <p>
-                My goal is to bridge technology and business — applying strong analytical foundations and
-                design thinking to build solutions that are intelligent, user-friendly, and impactful. I enjoy
-                working across the full spectrum from embedded systems to UI/UX design.
+                I am passionate about applying critical thinking and data-backed reasoning to real business
+                challenges. Whether it is working with teams, building strategy, or understanding systems,
+                I bring both a technical perspective and a management mindset to everything I do.
               </p>
             </section>
 
@@ -279,7 +283,7 @@ export default function Portfolio() {
                 {services.map((s) => (
                   <li key={s.title} className="service-item">
                     <div className="service-icon-box">
-                      <ion-icon name={s.icon} size="large" style={{ color: 'var(--orange-yellow-crayola)' }} />
+                      <IonIcon name={s.icon} size="large" style={{ color: 'var(--orange-yellow-crayola)' }} />
                     </div>
                     <div className="service-content-box">
                       <h4 className="h4 service-item-title">{s.title}</h4>
@@ -311,16 +315,18 @@ export default function Portfolio() {
                       <p className="project-category">{p.category}</p>
                     </div>
                     <div className="project-links">
-                      <a
-                        href={p.github}
-                        className="project-link-icon"
-                        target="_blank"
-                        rel="noreferrer"
-                        title="GitHub"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ion-icon name="logo-github" />
-                      </a>
+                      {!p.hideSource && (
+                        <a
+                          href={p.github}
+                          className="project-link-icon"
+                          target="_blank"
+                          rel="noreferrer"
+                          title="GitHub"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <IonIcon name="logo-github" />
+                        </a>
+                      )}
                       {p.live && (
                         <a
                           href={p.live}
@@ -330,7 +336,7 @@ export default function Portfolio() {
                           title="Live Demo"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <ion-icon name="link-outline" />
+                          <IonIcon name="link-outline" />
                         </a>
                       )}
                     </div>
@@ -346,11 +352,11 @@ export default function Portfolio() {
               <h2 className="h2 article-title">Resume</h2>
               <div className="resume-actions">
                 <a href="/Subhadeep_Mandal_Resume.pdf" target="_blank" className="download-btn">
-                  <ion-icon name="eye-outline" />
+                  <IonIcon name="eye-outline" />
                   <span>View PDF</span>
                 </a>
                 <a href="/Subhadeep_Mandal_Resume.pdf" download="Subhadeep_Mandal_Resume.pdf" className="download-btn">
-                  <ion-icon name="download-outline" />
+                  <IonIcon name="download-outline" />
                   <span>Download</span>
                 </a>
               </div>
@@ -358,7 +364,7 @@ export default function Portfolio() {
 
             <section className="timeline">
               <div className="title-wrapper">
-                <div className="icon-box"><ion-icon name="briefcase-outline" /></div>
+                <div className="icon-box"><IonIcon name="briefcase-outline" /></div>
                 <h3 className="h3">Experience</h3>
               </div>
               <ol className="timeline-list">
@@ -379,7 +385,7 @@ export default function Portfolio() {
 
             <section className="timeline">
               <div className="title-wrapper">
-                <div className="icon-box"><ion-icon name="book-outline" /></div>
+                <div className="icon-box"><IonIcon name="book-outline" /></div>
                 <h3 className="h3">Education</h3>
               </div>
               <ol className="timeline-list">
@@ -442,8 +448,8 @@ export default function Portfolio() {
                   </p>
                 )}
                 <button className="form-btn" type="submit" disabled={formStatus === 'loading'}>
-                  <ion-icon name={formStatus === 'loading' ? 'reload-outline' : 'paper-plane'} />
-                  <span>{formStatus === 'loading' ? 'Sending…' : 'Send Message'}</span>
+                  <IonIcon name={formStatus === 'loading' ? 'reload-outline' : 'paper-plane'} />
+                  <span>{formStatus === 'loading' ? 'Sending...' : 'Send Message'}</span>
                 </button>
               </form>
             </section>
@@ -455,19 +461,19 @@ export default function Portfolio() {
               <ul className="social-list">
                 <li className="social-item">
                   <a href={person.github} className="social-link" target="_blank" rel="noreferrer">
-                    <ion-icon name="logo-github" />
+                    <IonIcon name="logo-github" />
                     <span>GitHub</span>
                   </a>
                 </li>
                 <li className="social-item">
                   <a href={person.linkedin} className="social-link" target="_blank" rel="noreferrer">
-                    <ion-icon name="logo-linkedin" />
+                    <IonIcon name="logo-linkedin" />
                     <span>LinkedIn</span>
                   </a>
                 </li>
                 <li className="social-item">
                   <a href={person.instagram} className="social-link" target="_blank" rel="noreferrer">
-                    <ion-icon name="logo-instagram" />
+                    <IonIcon name="logo-instagram" />
                     <span>Instagram</span>
                   </a>
                 </li>
@@ -486,7 +492,7 @@ export default function Portfolio() {
         {selectedProject && (
           <div className="project-modal" onClick={(e) => e.stopPropagation()}>
             <button className="project-modal-close" onClick={closeModal}>
-              <ion-icon name="close-outline" />
+              <IonIcon name="close-outline" />
             </button>
             <div className="project-modal-img">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -520,7 +526,7 @@ export default function Portfolio() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <ion-icon name="logo-github" />
+                    <IonIcon name="logo-github" />
                     <span>Source Code</span>
                   </a>
                 )}
@@ -531,7 +537,7 @@ export default function Portfolio() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <ion-icon name="link-outline" />
+                    <IonIcon name="link-outline" />
                     <span>Live Demo</span>
                   </a>
                 )}
